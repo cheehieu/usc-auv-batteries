@@ -1,0 +1,15 @@
+If you know many amp hours of the battery, and the amount of the amps being drained you can extrapolate how much power is left.
+
+Regardless of the discharge curve of the battery, it should still be possible to create a map of voltage to percent remaining and output that. Going further, it should be possible to keep a count of mAh output and use that for a percent calculation.
+
+Lots of devices and battery packs already do this, actually. TI makes a whole line of Li battery monitor chips that measure current and voltage in and out of the battery, can calibrate for self-discharge based on temperature, and give really accurate estimates of remaining runtime.
+Unfortunately, one of those chips costs about $0.70, and a crappy voltage-measurement circuit that uses one of the leftover A/D ports on your micro-controller costs about $0.10 to implement.
+
+Battery makers can, it's called coluomb counting. If you cycle your battery completely, your gage will be more accurate if the software has the hooks for it.
+
+The battery's output is not just a function of energy consumed. Temperature and hysteresis effects also has a large effect and can perturb the charge/discharge curve enough to make prediction very difficult.
+
+To accurately measure the capacity of a battery you need to do coulomb counting, i.e. observe the current draw over a known time period (coulombs are units of charge, and amp-hours or milliamp-seconds are also units of charge). Unfortunately, measuring small magnitudes of current accurately is not a trivial engineering task, and also not cheap. Your portable devices are not going to spend the extra money on hall-effect current sensors and the firmware necessary to count coulombs flowing out of the battery. 
+
+Multiple slaves can be connected to the master which monitors the current and integrates it over time to calculate the net Coulomb flow and this is modified using voltage and temperature data from the slaves to calculate the battery SOC.
+
